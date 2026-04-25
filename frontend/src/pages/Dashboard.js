@@ -16,7 +16,7 @@ ChartJS.register(
     Title, Tooltip, Legend
 );
 
-const API = 'http://localhost:5000/api';
+const API = 'https://social-media-dashboard-lrbf.onrender.com/api';
 
 function Dashboard() {
     const navigate = useNavigate();

@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
-const API = 'http://localhost:5000/api';
+const API = 'https://social-media-dashboard-lrbf.onrender.com/api';
+
 
 function Login() {
     const navigate = useNavigate();

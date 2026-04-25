@@ -9,7 +9,10 @@ const PORT = process.env.PORT || 5000;
 
 // MIDDLEWARE
 app.use(cors({
-    origin: ['http://localhost:3000'],
+    origin: [
+        'http://localhost:3000',
+        'https://social-media-dashboard-lrbf.onrender.com'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
