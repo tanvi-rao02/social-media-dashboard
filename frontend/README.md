@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# 📊 Social Media Analytics Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Project Banner](https://img.shields.io/badge/Project-Social%20Media%20Analytics-blue)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-Express-green?logo=node.js)
+![MySQL](https://img.shields.io/badge/Database-MySQL-orange?logo=mysql)
 
-## Available Scripts
+> A full-stack Social Media Analytics Dashboard built as a DBMS group project.
+> Track posts, likes, comments, shares and visualize engagement using beautiful charts.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🌐 Live Demo
+- 🔗 **Live App:** https://social-media-dashboard-lk97.vercel.app
+- ⚙️ **Backend API:** https://social-media-dashboard-lrbf.onrender.com
+- 💻 **GitHub Repo:** https://github.com/tanvi-rao02/social-media-dashboard
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🎯 Project Overview
+This project is a Social Media Analytics Dashboard that allows users to:
+- Register and Login securely using JWT Authentication
+- View analytics like total posts, likes, comments and shares
+- See the most liked post highlighted on dashboard
+- Visualize data using Bar, Line and Pie charts
+- Add new posts with engagement data
+- Delete existing posts
+- View user leaderboard based on total engagement
+- Filter analytics by platform (Twitter, Instagram, LinkedIn, Facebook)
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Tech Stack
 
-### `npm run build`
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React.js, Chart.js, Axios, CSS |
+| Backend | Node.js, Express.js |
+| Database | MySQL (Railway) |
+| Authentication | JWT + Bcrypt |
+| Version Control | Git + GitHub |
+| Deployment | Vercel (Frontend) + Render (Backend) |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🗄️ Database Schema
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Tables
+- **users** - id, name, email, password, created_at
+- **posts** - id, user_id (FK), content, platform, created_at
+- **engagement** - id, post_id (FK), likes, comments, shares, recorded_at
 
-### `npm run eject`
+### DBMS Concepts Used
+- ✅ Primary Key and Foreign Key
+- ✅ Normalization (1NF, 2NF, 3NF)
+- ✅ JOIN Queries (3 tables joined)
+- ✅ Aggregate Functions (SUM, AVG, COUNT)
+- ✅ Indexing for performance
+- ✅ Referential Integrity (ON DELETE CASCADE)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📁 Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
