@@ -38,9 +38,10 @@ function Dashboard() {
 
     const axiosConfig = { headers: { Authorization: `Bearer ${token}` } };
 
-    useEffect(() => {
-        fetchAllData();
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+    fetchAllData();
+}, []);
 
     const fetchAllData = async () => {
         setLoading(true);
