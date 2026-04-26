@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
     origin: [
         'http://localhost:3000',
-        'social-media-dashboard-pl2o-git-main-raotanvi29-3490s-projects.vercel.app'
+        'https://social-media-dashboard-lk97.vercel.app/'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
