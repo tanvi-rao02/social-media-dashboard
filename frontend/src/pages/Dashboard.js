@@ -31,10 +31,14 @@ function Dashboard() {
     const [leaderboard, setLeaderboard] = useState([]);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [newPost, setNewPost] = useState({
-        content: '', platform: 'twitter',
-        likes: '', comments: '', shares: ''
-    });
+   const [newPost, setNewPost] = useState({
+    content: '',
+    platform: 'twitter',
+    likes: '',
+    comments: '',
+    shares: '',
+    reposts: ''    // NEW
+});
 
     const axiosConfig = { headers: { Authorization: `Bearer ${token}` } };
 
@@ -100,13 +104,32 @@ function Dashboard() {
     };
 
     const barChartData = {
-        labels: topPosts.map(p => p.label),
-        datasets: [
-            { label: 'Likes', data: topPosts.map(p => p.likes), backgroundColor: '#4f46e5' },
-            { label: 'Comments', data: topPosts.map(p => p.comments), backgroundColor: '#10b981' },
-            { label: 'Shares', data: topPosts.map(p => p.shares), backgroundColor: '#f59e0b' },
-        ]
-    };
+    labels: topPosts.map(p => p.label),
+    datasets: [
+        { 
+            label: 'Likes', 
+            data: topPosts.map(p => p.likes), 
+            backgroundColor: '#4f46e5' 
+        },
+        { 
+            label: 'Comments', 
+            data: topPosts.map(p => p.comments), 
+            backgroundColor: '#10b981' 
+        },
+        { 
+            label: 'Shares', 
+            data: topPosts.map(p => p.shares), 
+            backgroundColor: '#f59e0b' 
+        },
+        // NEW
+        { 
+            label: 'Reposts', 
+            data: topPosts.map(p => p.reposts), 
+            backgroundColor: '#ef4444' 
+        },
+    ]
+};
+
 
     const lineChartData = {
         labels: overTime.map(d => d.date),
@@ -139,24 +162,31 @@ function Dashboard() {
 
             <div className="dashboard-content">
 
-                <div className="cards-grid">
-                    <div className="card blue">
-                        <h3>Total Posts</h3>
-                        <p>{summary?.total_posts || 0}</p>
-                    </div>
-                    <div className="card green">
-                        <h3>Total Likes</h3>
-                        <p>{Number(summary?.total_likes || 0).toLocaleString()}</p>
-                    </div>
-                    <div className="card orange">
-                        <h3>Total Comments</h3>
-                        <p>{Number(summary?.total_comments || 0).toLocaleString()}</p>
-                    </div>
-                    <div className="card purple">
-                        <h3>Total Shares</h3>
-                        <p>{Number(summary?.total_shares || 0).toLocaleString()}</p>
-                    </div>
-                </div>
+               <div className="cards-grid">
+    <div className="card blue">
+        <h3>Total Posts</h3>
+        <p>{summary?.total_posts || 0}</p>
+    </div>
+    <div className="card green">
+        <h3>Total Likes</h3>
+        <p>{Number(summary?.total_likes || 0).toLocaleString()}</p>
+    </div>
+    <div className="card orange">
+        <h3>Total Comments</h3>
+        <p>{Number(summary?.total_comments || 0).toLocaleString()}</p>
+    </div>
+    <div className="card purple">
+        <h3>Total Shares</h3>
+        <p>{Number(summary?.total_shares || 0).toLocaleString()}</p>
+    </div>
+
+    {/* NEW REPOSTS CARD */}
+    <div className="card teal">
+        <h3>Total Reposts</h3>
+        <p>{Number(summary?.total_reposts || 0).toLocaleString()}</p>
+    </div>
+</div>
+
 
                 {topPost && (
                     <div className="top-post-banner">
@@ -218,25 +248,31 @@ function Dashboard() {
                             required
                         />
                         <div className="form-row">
-                            <select
-                                value={newPost.platform}
-                                onChange={e => setNewPost({...newPost, platform: e.target.value})}
-                            >
-                                <option value="twitter">Twitter</option>
-                                <option value="instagram">Instagram</option>
-                                <option value="linkedin">LinkedIn</option>
-                                <option value="facebook">Facebook</option>
-                            </select>
-                            <input type="number" placeholder="Likes" min="0"
-                                value={newPost.likes}
-                                onChange={e => setNewPost({...newPost, likes: e.target.value})} />
-                            <input type="number" placeholder="Comments" min="0"
-                                value={newPost.comments}
-                                onChange={e => setNewPost({...newPost, comments: e.target.value})} />
-                            <input type="number" placeholder="Shares" min="0"
-                                value={newPost.shares}
-                                onChange={e => setNewPost({...newPost, shares: e.target.value})} />
-                        </div>
+    <select
+        value={newPost.platform}
+        onChange={e => setNewPost({...newPost, platform: e.target.value})}
+    >
+        <option value="twitter">Twitter</option>
+        <option value="instagram">Instagram</option>
+        <option value="linkedin">LinkedIn</option>
+        <option value="facebook">Facebook</option>
+    </select>
+    <input type="number" placeholder="Likes" min="0"
+        value={newPost.likes}
+        onChange={e => setNewPost({...newPost, likes: e.target.value})} />
+    <input type="number" placeholder="Comments" min="0"
+        value={newPost.comments}
+        onChange={e => setNewPost({...newPost, comments: e.target.value})} />
+    <input type="number" placeholder="Shares" min="0"
+        value={newPost.shares}
+        onChange={e => setNewPost({...newPost, shares: e.target.value})} />
+
+    {/* NEW */}
+    <input type="number" placeholder="Reposts" min="0"
+        value={newPost.reposts}
+        onChange={e => setNewPost({...newPost, reposts: e.target.value})} />
+</div>
+
                         <button type="submit">Add Post</button>
                     </form>
                 </div>
@@ -245,34 +281,41 @@ function Dashboard() {
                     <h3>📋 All Posts</h3>
                     <table>
                         <thead>
-                            <tr>
-                                <th>Author</th>
-                                <th>Content</th>
-                                <th>Platform</th>
-                                <th>Likes</th>
-                                <th>Comments</th>
-                                <th>Shares</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {posts.map(post => (
-                                <tr key={post.id}>
-                                    <td>{post.author}</td>
-                                    <td>{post.content.substring(0, 40)}...</td>
-                                    <td><span className={`platform-badge ${post.platform}`}>{post.platform}</span></td>
-                                    <td>❤️ {post.likes}</td>
-                                    <td>💬 {post.comments}</td>
-                                    <td>🔁 {post.shares}</td>
-                                    <td>
-                                        <button
-                                            onClick={() => handleDeletePost(post.id)}
-                                            className="delete-btn"
-                                        >Delete</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
+    <tr>
+        <th>Author</th>
+        <th>Content</th>
+        <th>Platform</th>
+        <th>Likes</th>
+        <th>Comments</th>
+        <th>Shares</th>
+        <th>Reposts</th>  {/* NEW */}
+        <th>Action</th>
+    </tr>
+</thead>
+<tbody>
+    {posts.map(post => (
+        <tr key={post.id}>
+            <td>{post.author}</td>
+            <td>{post.content.substring(0, 40)}...</td>
+            <td>
+                <span className={`platform-badge ${post.platform}`}>
+                    {post.platform}
+                </span>
+            </td>
+            <td>❤️ {post.likes}</td>
+            <td>💬 {post.comments}</td>
+            <td>🔁 {post.shares}</td>
+            <td>🔃 {post.reposts}</td>  {/* NEW */}
+            <td>
+                <button
+                    onClick={() => handleDeletePost(post.id)}
+                    className="delete-btn"
+                >Delete</button>
+            </td>
+        </tr>
+    ))}
+</tbody>
+
                     </table>
                 </div>
 

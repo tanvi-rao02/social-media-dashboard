@@ -20,19 +20,21 @@ const verifyToken = (req, res, next) => {
 // SUMMARY STATS
 router.get('/summary', verifyToken, async (req, res) => {
     try {
-        const [[totals]] = await db.query(`
-            SELECT 
-                COUNT(DISTINCT p.id) AS total_posts,
-                COUNT(DISTINCT p.user_id) AS total_users,
-                SUM(e.likes) AS total_likes,
-                SUM(e.comments) AS total_comments,
-                SUM(e.shares) AS total_shares,
-                SUM(e.likes + e.comments + e.shares) AS total_engagement,
-                AVG(e.likes) AS avg_likes,
-                AVG(e.likes + e.comments + e.shares) AS avg_engagement
-            FROM posts p
-            LEFT JOIN engagement e ON p.id = e.post_id
-        `);
+       const [[totals]] = await db.query(`
+    SELECT 
+        COUNT(DISTINCT p.id) AS total_posts,
+        COUNT(DISTINCT p.user_id) AS total_users,
+        SUM(e.likes) AS total_likes,
+        SUM(e.comments) AS total_comments,
+        SUM(e.shares) AS total_shares,
+        SUM(e.reposts) AS total_reposts,
+        SUM(e.likes + e.comments + e.shares + e.reposts) 
+        AS total_engagement,
+        AVG(e.likes) AS avg_likes,
+        AVG(e.reposts) AS avg_reposts
+    FROM posts p
+    LEFT JOIN engagement e ON p.id = e.post_id
+`);
 
         const [[topPost]] = await db.query(`
             SELECT p.content, p.platform, u.name, e.likes, e.comments, e.shares
@@ -77,17 +79,19 @@ router.get('/by-platform', verifyToken, async (req, res) => {
 router.get('/top-posts', verifyToken, async (req, res) => {
     try {
         const [data] = await db.query(`
-            SELECT 
-                CONCAT(LEFT(p.content, 30), '...') AS label,
-                e.likes,
-                e.comments,
-                e.shares,
-                (e.likes + e.comments + e.shares) AS total
-            FROM posts p
-            JOIN engagement e ON p.id = e.post_id
-            ORDER BY total DESC
-            LIMIT 6
-        `);
+    SELECT 
+        CONCAT(LEFT(p.content, 30), '...') AS label,
+        e.likes,
+        e.comments,
+        e.shares,
+        e.reposts,
+        (e.likes + e.comments + e.shares + e.reposts) AS total
+    FROM posts p
+    JOIN engagement e ON p.id = e.post_id
+    ORDER BY total DESC
+    LIMIT 6
+`);
+
         res.json(data);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching top posts' });
@@ -118,18 +122,20 @@ router.get('/over-time', verifyToken, async (req, res) => {
 router.get('/leaderboard', verifyToken, async (req, res) => {
     try {
         const [data] = await db.query(`
-            SELECT 
-                u.name,
-                COUNT(p.id) AS total_posts,
-                SUM(e.likes) AS total_likes,
-                SUM(e.comments + e.shares) AS total_interactions,
-                SUM(e.likes + e.comments + e.shares) AS total_engagement
-            FROM users u
-            JOIN posts p ON u.id = p.user_id
-            JOIN engagement e ON p.id = e.post_id
-            GROUP BY u.id, u.name
-            ORDER BY total_engagement DESC
-        `);
+    SELECT 
+        u.name,
+        COUNT(p.id) AS total_posts,
+        SUM(e.likes) AS total_likes,
+        SUM(e.reposts) AS total_reposts,
+        SUM(e.likes + e.comments + e.shares + e.reposts) 
+        AS total_engagement
+    FROM users u
+    JOIN posts p ON u.id = p.user_id
+    JOIN engagement e ON p.id = e.post_id
+    GROUP BY u.id, u.name
+    ORDER BY total_engagement DESC
+`);
+
         res.json(data);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching leaderboard' });

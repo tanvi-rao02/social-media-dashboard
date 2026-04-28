@@ -33,11 +33,12 @@ router.get('/', verifyToken, async (req, res) => {
                 p.platform,
                 p.created_at,
                 u.name AS author,
-                u.email AS author_email,
                 COALESCE(e.likes, 0) AS likes,
                 COALESCE(e.comments, 0) AS comments,
                 COALESCE(e.shares, 0) AS shares,
-                COALESCE(e.likes + e.comments + e.shares, 0) AS total_engagement
+                COALESCE(e.reposts, 0) AS reposts,
+                COALESCE(e.likes + e.comments + e.shares + e.reposts, 0) 
+                AS total_engagement
             FROM posts p
             JOIN users u ON p.user_id = u.id
             LEFT JOIN engagement e ON p.id = e.post_id
@@ -55,11 +56,17 @@ router.get('/', verifyToken, async (req, res) => {
 // CREATE A POST
 router.post('/', verifyToken, async (req, res) => {
     try {
-        const { content, platform, likes, comments, shares } = req.body;
+        const { 
+            content, platform,
+            likes, comments, shares, reposts  // ADD reposts
+        } = req.body;
+
         const userId = req.user.id;
 
         if (!content) {
-            return res.status(400).json({ message: 'Content is required' });
+            return res.status(400).json({ 
+                message: 'Content is required' 
+            });
         }
 
         const [postResult] = await db.query(
@@ -68,8 +75,16 @@ router.post('/', verifyToken, async (req, res) => {
         );
 
         await db.query(
-            'INSERT INTO engagement (post_id, likes, comments, shares) VALUES (?, ?, ?, ?)',
-            [postResult.insertId, likes || 0, comments || 0, shares || 0]
+            `INSERT INTO engagement 
+             (post_id, likes, comments, shares, reposts) 
+             VALUES (?, ?, ?, ?, ?)`,
+            [
+                postResult.insertId,
+                likes || 0,
+                comments || 0,
+                shares || 0,
+                reposts || 0   // ADD reposts
+            ]
         );
 
         res.status(201).json({
@@ -79,9 +94,12 @@ router.post('/', verifyToken, async (req, res) => {
 
     } catch (error) {
         console.error('Create post error:', error);
-        res.status(500).json({ message: 'Error creating post' });
+        res.status(500).json({ 
+            message: 'Error creating post' 
+        });
     }
 });
+
 
 // DELETE A POST
 router.delete('/:id', verifyToken, async (req, res) => {
